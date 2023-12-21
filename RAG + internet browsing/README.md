@@ -1,4 +1,4 @@
-## Project : Create a Chatbot in Python with LangChain and RAG
+## Project : RAG + internet browsing
 
 [medium](https://medium.com/mlearning-ai/create-a-chatbot-in-python-with-langchain-and-rag-85bfba8c62d2)
 In this tutorial,
