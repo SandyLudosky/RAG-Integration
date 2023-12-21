@@ -1,0 +1,23 @@
+Introduction | 🦜️🔗 Langchain
+LangChainis a framework for developing applications powered by language models. It enables applications that:
+This framework consists of several parts.
+
+Together, these products simplify the entire application lifecycle:
+The main value props of the LangChain packages are:
+Off-the-shelf chains make it easy to get started. Components make it easy to customize existing chains and build new ones.
+The LangChain libraries themselves are made up of several different packages.
+Here’show to install LangChain, set up your environment, and start building.
+We recommend following ourQuickstartguide to familiarize yourself with the framework by building your first LangChain application.
+Read up on ourSecuritybest practices to make sure you're developing safely with LangChain.
+These docs focus on the Python LangChain library.Head herefor docs on the JavaScript LangChain library.
+LCEL is a declarative way to compose chains. LCEL was designed from day 1 to support putting prototypes in production, with no code changes, from the simplest “prompt + LLM” chain to the most complex chains.
+LangChain provides standard, extendable interfaces and integrations for the following modules:
+Interface with language models
+Interface with application-specific data
+Let models choose which tools to use given high-level directives
+Walkthroughs and techniques for common end-to-end use cases, like:
+LangChain is part of a rich ecosystem of tools that integrate with our framework and build on top of it. Check out our growing list ofintegrations.
+Best practices for developing with LangChain.
+Head to the reference section for full documentation of all classes and methods in the LangChain and LangChain Experimental Python packages.
+Check out the developer's guide for guidelines on contributing and help getting your dev environment set up.
+Head to theCommunity navigatorto find places to ask questions, share feedback, meet other developers, and dream about the future of LLM’s.
