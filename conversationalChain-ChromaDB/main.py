@@ -12,13 +12,10 @@ from langchain.prompts.chat import (
     SystemMessagePromptTemplate,
 )
 from langchain.prompts import ChatPromptTemplate
-from langchain.schema import StrOutputParser
-from langchain.schema.runnable import RunnablePassthrough
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 
 from langchain.vectorstores import Chroma
-from colorama import Fore
 
 load_dotenv()
 
@@ -50,7 +47,6 @@ def create_vector_store(chunks: list):
     """Create a vector store from a set of documents"""
     # create the open-source embedding function
     embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-
     return Chroma.from_documents(chunks, embedding_function)
 
 
@@ -58,12 +54,12 @@ def get_conversation_chain(
     vector_store, system_message: str, human_message: str
 ) -> ConversationalRetrievalChain:
     """Create a conversation chain from a vector store and a system and human message."""
-    llm = ChatOpenAI(model=LANGUAGE_MODEL)  # we can swap in any open source model!
+    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)  # we can swap in any open source model!
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
     conversation_chain = ConversationalRetrievalChain.from_llm(
-        llm=ChatOpenAI(model="gpt-3.5-turbo", temperature=0),
-        retriever=vector_store.as_retriever(),
+        llm=llm,
+        retriever=vector_store.as_retriever()   ,
         memory=memory,
         combine_docs_chain_kwargs={
             "prompt": ChatPromptTemplate.from_messages(
@@ -80,17 +76,17 @@ def get_conversation_chain(
 
 def split_documents():
     """Load a file from path, split it into chunks, embed each chunk and load it into the vector store."""
-    raw_documents = TextLoader("./docs/faq_abc.txt").load()
+    raw_documents = TextLoader("./docs/faq.txt").load()
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
     return text_splitter.split_documents(raw_documents)
 
 
 def query(query):
     documents = split_documents()
-    retriever = create_vector_store(documents)
+    db = create_vector_store(documents)
 
     chain = get_conversation_chain(
-        retriever, system_message_prompt, human_message_prompt
+        db, system_message_prompt, human_message_prompt
     )
     result = chain.invoke({"question": query})
     return result

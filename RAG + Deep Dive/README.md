@@ -1,10 +1,10 @@
-## Projects :
-
-- [1] - Create a Chatbot in Python with LangChain and RAG
-- [2] - Project : Build a AI-powered chatbot application
-- [3] - Project : AG + internet browsing
+## Project : Build a Custom Q&A Chatbot with OpenAI, LangChain, Chroma and Streamlit
 
 ....
+
+## 💻 Project Overview
+
+we will build a custom Q&A chatbot using OpenAI, LangChain and Chroma. We will use the OpenAI API to generate answers to questions, LangChain to translate the questions and answers to and from English, and Chroma to convert the text to speech. We will also use the Google Cloud Text-to-Speech API to convert the text to speech.
 
 ## 🛠️ Requirements : Installation & Setup
 
@@ -50,7 +50,7 @@ use pip3 on a Mac or Linux and pip on Windows
 
 ```
 pip install -r requirements.txt
-pip install sentence-transformers
+pip install --upgrade langchain
 ```
 
 ## [Get an API key](https://platform.openai.com/account/api-keys)

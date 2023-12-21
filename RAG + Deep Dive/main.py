@@ -11,12 +11,9 @@ from langchain.prompts.chat import (
     SystemMessagePromptTemplate,
 )
 from langchain.prompts import ChatPromptTemplate
-from langchain.memory import ConversationBufferMemory
-from langchain.chains import ConversationalRetrievalChain
+from langchain.schema import StrOutputParser
+from langchain.schema.runnable import RunnablePassthrough
 from langchain.vectorstores import Chroma
-from colorama import Fore
-from get_dataset import scrape
-
 
 load_dotenv()
 
@@ -42,10 +39,14 @@ chat_prompt_template = ChatPromptTemplate.from_messages(
 model = ChatOpenAI()
 
 
-def split_documents():
+def format_docs(docs):
+    return "\n\n".join([d.page_content for d in docs])
+
+
+def load_documents():
     """Load a file from path, split it into chunks, embed each chunk and load it into the vector store."""
-    raw_documents = TextLoader("./docs/dataset.txt").load()
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    raw_documents = TextLoader("./docs/faq_abc.txt").load()
+    text_splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=0)
     return text_splitter.split_documents(raw_documents)
 
 
@@ -57,42 +58,27 @@ def load_embeddings(documents, user_query):
     return db.as_retriever()
 
 
+def generate_response(retriever, query):
+    pass
+    # Create a prompt template using a template from the config module and input variables
+    # representing the context and question.
+    # create the prompt
 
-def get_conversation_chain( vector_store, system_message: str, human_message: str):
-    """Create a conversation chain from a vector store and a system and human message."""
-    llm = ChatOpenAI(model=LANGUAGE_MODEL)  # we can swap in any open source model!
-    memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-
-    conversation_chain = ConversationalRetrievalChain.from_llm(
-        llm=ChatOpenAI(model="gpt-3.5-turbo", temperature=0),
-        retriever=vector_store.as_retriever(),
-        memory=memory,
-        combine_docs_chain_kwargs={
-            "prompt": ChatPromptTemplate.from_messages(
-                [
-                    system_message,
-                    human_message,
-                ]
-            ),
-        },
+    chain = (
+        {"context": retriever, "question": RunnablePassthrough()}
+        | chat_prompt_template
+        | model
+        | StrOutputParser()
     )
-
-    return conversation_chain
+    return chain.invoke(query)
 
 
 def query(query):
-    documents = split_documents()
+    documents = load_documents()
     retriever = load_embeddings(documents, query)
-    chain = get_conversation_chain(
-        retriever, system_message_prompt, human_message_prompt
-    )
-    result = chain.invoke({"question": query})
-    return result
+    response = generate_response(retriever, query)
+    return response
 
 
-def main():
-    scrape(["https://python.langchain.com/"])
-
-
-if __name__ == "__main__":
-    main()
+response = query("What is the best way to get started with Langchain?")
+print(response)
