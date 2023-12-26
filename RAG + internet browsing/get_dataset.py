@@ -1,9 +1,6 @@
-import time
-import os
-import pandas as pd
 from tqdm import tqdm
 from trafilatura.sitemaps import sitemap_search
-from trafilatura import fetch_url, extract, extract_metadata
+from trafilatura import extract_metadata
 
 import requests
 from bs4 import BeautifulSoup
@@ -17,10 +14,9 @@ def get_urls_from_sitemap(resource_url: str) -> list:
     return urls
 
 
-def create_dataset(list_of_websites: list) -> pd.DataFrame:
+def create_dataset(list_of_websites: list) :
     """
     scrapes the data from the list of websites
-    Function that creates a Pandas DataFrame of URLs and articles.
     """
     data = []
     for website in tqdm(list_of_websites, desc="Websites"):
