@@ -1,0 +1,5 @@
+Apple (AAPL)
+Microsoft (MSFT)
+Amazon (AMZN)
+Alphabet (GOOGL)
+Meta Platforms (META)
